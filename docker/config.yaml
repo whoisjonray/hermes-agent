@@ -1,0 +1,35 @@
+# Hermes TRESR Config - Opus orchestrator + Sonnet execution
+
+model:
+  default: "anthropic/claude-opus-4-6"
+  provider: "openrouter"
+  base_url: "https://openrouter.ai/api/v1"
+
+compression:
+  enabled: true
+  threshold: 0.50
+  target_ratio: 0.20
+  protect_last_n: 20
+  summary_model: "google/gemini-3-flash-preview"
+
+delegation:
+  max_iterations: 50
+  default_toolsets: ["terminal", "file", "web"]
+  model: "anthropic/claude-sonnet-4-6"
+  provider: "openrouter"
+
+terminal:
+  backend: "local"
+  timeout: 180
+
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+
+approvals:
+  mode: "off"
+
+timezone: "America/Chicago"
+
+session_reset:
+  mode: "none"
