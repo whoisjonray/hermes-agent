@@ -5758,12 +5758,11 @@ Examples:
     # Pre-process argv so unquoted multi-word session names after -c / -r
     # are merged into a single token before argparse sees them.
     # e.g. ``hermes -c Pokemon Agent Dev`` → ``hermes -c 'Pokemon Agent Dev'``
-    _processed_argv = _coalesce_session_name_args(sys.argv[1:])
-    args = parser.parse_args(_processed_argv)
-
     # ── Container-aware routing ────────────────────────────────────────
     # When NixOS container mode is active, route ALL subcommands into
-    # the managed container. This runs before any subcommand dispatch.
+    # the managed container.  This MUST run before parse_args() so that
+    # --help, unrecognised flags, and every subcommand are forwarded
+    # transparently instead of being intercepted by argparse on the host.
     try:
         from hermes_cli.config import get_container_exec_info
         container_info = get_container_exec_info()
@@ -5774,6 +5773,9 @@ Examples:
         raise  # Re-raise sys.exit from _exec_in_container
     except Exception:
         pass  # Container routing unavailable, proceed locally
+
+    _processed_argv = _coalesce_session_name_args(sys.argv[1:])
+    args = parser.parse_args(_processed_argv)
 
     # Handle --version flag
     if args.version:

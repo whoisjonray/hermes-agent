@@ -568,7 +568,7 @@
       })
 
       # ── Host user group membership ─────────────────────────────────────
-      (lib.mkIf (cfg.container.hostUsers != []) {
+      (lib.mkIf (cfg.container.enable && cfg.container.hostUsers != []) {
         users.users = lib.genAttrs cfg.container.hostUsers (user: {
           extraGroups = [ cfg.group ];
         });
@@ -659,7 +659,8 @@ HERMES_CONTAINER_MODE_EOF
             # Remove symlink bridge for hostUsers
             ${lib.concatStringsSep "\n" (map (user:
               let
-                symlinkPath = "/home/${user}/.hermes";
+                userHome = config.users.users.${user}.home;
+                symlinkPath = "${userHome}/.hermes";
               in ''
                 if [ -L "${symlinkPath}" ] && [ "$(readlink "${symlinkPath}")" = "${cfg.stateDir}/.hermes" ]; then
                   rm -f "${symlinkPath}"
@@ -675,7 +676,7 @@ HERMES_CONTAINER_MODE_EOF
           ${lib.optionalString cfg.container.enable
             (lib.concatStringsSep "\n" (map (user:
               let
-                userHome = "/home/${user}";
+                userHome = config.users.users.${user}.home;
                 symlinkPath = "${userHome}/.hermes";
                 target = "${cfg.stateDir}/.hermes";
               in ''
