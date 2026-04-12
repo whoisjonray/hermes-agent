@@ -1,0 +1,31 @@
+{
+  "_description": "LOCKED mockup parameters for high-converting Facebook ads",
+  "_reference": "Based on output/coffee-lifestyle-v4.png - shirt fills frame, centered",
+  "_updated": "2026-01-11",
+
+  "lifestyle": {
+    "shirtWidthPercent": 1.0,
+    "shirtYOffset": 0,
+    "designWidthPercent": 0.35,
+    "designYOffset": 380,
+    "outputSize": 1024,
+    "bgThreshold": 60
+  },
+
+  "background_requirements": {
+    "style": "dark moody flatlay",
+    "center": "clear - no props in center 60% of frame",
+    "props": "frame edges only, relevant to niche",
+    "lighting": "dramatic side/top lighting",
+    "colors": "dark charcoal/slate/wood base",
+    "format": "1024x1024 square"
+  },
+
+  "best_practices": {
+    "shirt_size": "55% of frame width for clear visibility",
+    "shirt_position": "centered horizontally, slightly above center vertically",
+    "design_visibility": "design should be clearly readable at thumbnail size",
+    "background_contrast": "dark background for black shirt to pop with subtle edge definition",
+    "props_placement": "corners and edges only, never obscuring shirt"
+  }
+}

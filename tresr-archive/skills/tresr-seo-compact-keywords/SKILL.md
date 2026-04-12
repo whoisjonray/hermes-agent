@@ -128,7 +128,7 @@ Run weekly (or as a cron concept) to catch any products missing SEO elements:
 import requests, os
 
 SHOP = "becc05-b4.myshopify.com"
-TOKEN = os.environ.get('SHOPIFY_ACCESS_TOKEN', 'shpat_b4da515ab8255772e7833ec841cd34e=REDACTED')
+TOKEN = os.environ.get('SHOPIFY_ACCESS_TOKEN', 'REDACTED_SHOPIFY_TOKEN=REDACTED')
 HEADERS = {'X-Shopify-Access-Token': TOKEN}
 
 def seo_audit():

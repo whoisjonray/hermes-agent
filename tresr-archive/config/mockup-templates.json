@@ -1,0 +1,80 @@
+{
+  "templates": {
+    "clean-black": {
+      "name": "Clean Black Tee (White BG)",
+      "file": "blank-black-tee-whitebg.png",
+      "use_case": "product_listing",
+      "platforms": ["shopify", "amazon", "etsy"],
+      "settings": {
+        "design_width_percent": 0.35,
+        "design_y_offset": 340,
+        "bg_mode": "black",
+        "threshold": 25
+      }
+    },
+    "lifestyle-basketball": {
+      "name": "Lifestyle Basketball BG",
+      "file": "FINAL-w-TEE.png",
+      "use_case": "ad_creative",
+      "platforms": ["facebook", "instagram", "tiktok"],
+      "settings": {
+        "design_width_percent": 0.35,
+        "design_y_offset": 280,
+        "bg_mode": "black",
+        "threshold": 35
+      }
+    }
+  },
+  "colors": {
+    "black": {
+      "templates": ["clean-black", "lifestyle-basketball"],
+      "design_colors": ["white", "gold", "red"]
+    },
+    "white": {
+      "templates": ["clean-white"],
+      "design_colors": ["black", "navy", "red"],
+      "status": "needs_template"
+    },
+    "navy": {
+      "templates": ["clean-navy"],
+      "design_colors": ["white", "gold"],
+      "status": "needs_template"
+    }
+  },
+  "garments": {
+    "tshirt": {
+      "status": "active",
+      "templates": ["clean-black", "lifestyle-basketball"]
+    },
+    "hoodie": {
+      "status": "needs_templates"
+    },
+    "sweatshirt": {
+      "status": "needs_templates"
+    },
+    "tank": {
+      "status": "needs_templates"
+    }
+  },
+  "ad_testing": {
+    "strategy": "A/B test mockup styles",
+    "variants": [
+      {
+        "name": "Product Shot",
+        "template": "clean-black",
+        "hypothesis": "Clean product = higher purchase intent"
+      },
+      {
+        "name": "Lifestyle Creative",
+        "template": "lifestyle-basketball",
+        "hypothesis": "Lifestyle = higher engagement/CTR"
+      }
+    ],
+    "metrics_to_track": [
+      "CTR (click-through rate)",
+      "CPC (cost per click)",
+      "CVR (conversion rate)",
+      "ROAS (return on ad spend)"
+    ]
+  }
+}

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Mapping Calibration Tool</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        .template-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .template-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .canvas-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 2px solid #ddd;
+            cursor: crosshair;
+            display: block;
+        }
+        .points-list {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        .point {
+            padding: 5px;
+            margin: 2px 0;
+        }
+        .point.complete {
+            color: #28a745;
+            font-weight: 600;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button.secondary {
+            background: #6c757d;
+        }
+        button.secondary:hover {
+            background: #545b62;
+        }
+        .output {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .color-guide {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        .color-sample {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 Template Mapping Calibration Tool</h1>
+
+    <div class="instructions">
+        <h3>Instructions:</h3>
+        <ol>
+            <li><strong>Click 4 corners</strong> on each template to define where the design should appear</li>
+            <li>Click in this order: <strong>Top-Left → Top-Right → Bottom-Right → Bottom-Left</strong></li>
+            <li>The corners should form a quadrilateral on the shirt's chest area</li>
+            <li>Click "Reset" if you make a mistake</li>
+            <li>When done with all templates, click "Generate Python Code" at the bottom</li>
+        </ol>
+        <div class="color-guide">
+            <div class="color-sample">
+                <div class="color-box" style="background: red;"></div>
+                <span>Top-Left</span>
+            </div>
+            <div class="color-sample">
+                <div class="color-box" style="background: blue;"></div>
+                <span>Top-Right</span>
+            </div>
+            <div class="color-sample">
+                <div class="color-box" style="background: yellow;"></div>
+                <span>Bottom-Right</span>
+            </div>
+            <div class="color-sample">
+                <div class="color-box" style="background: lime;"></div>
+                <span>Bottom-Left</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="templates"></div>
+
+    <button onclick="generateCode()" style="background: #28a745; font-size: 16px; padding: 15px 30px;">
+        📋 Generate Python Code
+    </button>
+
+    <div class="output" id="output" style="display: none;"></div>
+
+    <script>
+        const templates = [
+            'lifestyle-male-1-caucasian-mental-health.png',
+            'lifestyle-male-2-black-developer.png',
+            'lifestyle-male-3-asian-coffee.png',
+            'lifestyle-male-4-hispanic-entrepreneur.png',
+            'lifestyle-female-1-caucasian-mental-health.png',
+            'lifestyle-female-2-black-developer.png',
+            'lifestyle-female-3-asian-fitness.png',
+            'lifestyle-female-4-hispanic-entrepreneur.png'
+        ];
+
+        const descriptions = {
+            'lifestyle-male-1-caucasian-mental-health.png': 'Male 1 - Caucasian, mental-health',
+            'lifestyle-male-2-black-developer.png': 'Male 2 - Black, developer',
+            'lifestyle-male-3-asian-coffee.png': 'Male 3 - Asian, coffee',
+            'lifestyle-male-4-hispanic-entrepreneur.png': 'Male 4 - Hispanic, entrepreneur',
+            'lifestyle-female-1-caucasian-mental-health.png': 'Female 1 - Caucasian, mental-health',
+            'lifestyle-female-2-black-developer.png': 'Female 2 - Black, developer',
+            'lifestyle-female-3-asian-fitness.png': 'Female 3 - Asian, fitness',
+            'lifestyle-female-4-hispanic-entrepreneur.png': 'Female 4 - Hispanic, entrepreneur'
+        };
+
+        const mappings = {};
+        const colors = ['red', 'blue', 'yellow', 'lime'];
+        const labels = ['TL', 'TR', 'BR', 'BL'];
+
+        templates.forEach(template => {
+            const container = document.createElement('div');
+            container.className = 'template-container';
+            container.innerHTML = `
+                <div class="template-name">${template}</div>
+                <div class="canvas-container">
+                    <canvas id="canvas-${template}" width="1024" height="1024"></canvas>
+                </div>
+                <div>
+                    <button onclick="resetTemplate('${template}')">Reset</button>
+                    <button class="secondary" onclick="loadDefault('${template}')">Load Current Default</button>
+                </div>
+                <div class="points-list" id="points-${template}">
+                    <div class="point">1. Top-Left: (click on image)</div>
+                    <div class="point">2. Top-Right: (click on image)</div>
+                    <div class="point">3. Bottom-Right: (click on image)</div>
+                    <div class="point">4. Bottom-Left: (click on image)</div>
+                </div>
+            `;
+            document.getElementById('templates').appendChild(container);
+
+            const canvas = document.getElementById(`canvas-${template}`);
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            // Load from server
+            img.src = `/templates/lifestyle/${template}`;
+
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0, 1024, 1024);
+                mappings[template] = { points: [], ctx, canvas };
+            };
+
+            img.onerror = () => {
+                ctx.fillStyle = '#f0f0f0';
+                ctx.fillRect(0, 0, 1024, 1024);
+                ctx.fillStyle = '#999';
+                ctx.font = '20px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(`Image not found: ${template}`, 512, 512);
+                ctx.fillText('Place this HTML file in scripts/image-pipeline/', 512, 550);
+                mappings[template] = { points: [], ctx, canvas };
+            };
+
+            canvas.onclick = (e) => handleClick(e, template);
+        });
+
+        function handleClick(e, template) {
+            const canvas = e.target;
+            const rect = canvas.getBoundingClientRect();
+            const x = Math.round((e.clientX - rect.left) * (1024 / rect.width));
+            const y = Math.round((e.clientY - rect.top) * (1024 / rect.height));
+
+            const mapping = mappings[template];
+            if (mapping.points.length >= 4) return;
+
+            mapping.points.push([x, y]);
+
+            // Draw point
+            const ctx = mapping.ctx;
+            const idx = mapping.points.length - 1;
+            ctx.fillStyle = colors[idx];
+            ctx.beginPath();
+            ctx.arc(x, y, 8, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Draw label
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 14px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(labels[idx], x, y);
+
+            // Draw lines between points
+            if (mapping.points.length > 1) {
+                ctx.strokeStyle = 'lime';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(mapping.points[0][0], mapping.points[0][1]);
+                for (let i = 1; i < mapping.points.length; i++) {
+                    ctx.lineTo(mapping.points[i][0], mapping.points[i][1]);
+                }
+                if (mapping.points.length === 4) {
+                    ctx.closePath();
+                }
+                ctx.stroke();
+            }
+
+            // Update points list
+            updatePointsList(template);
+        }
+
+        function updatePointsList(template) {
+            const mapping = mappings[template];
+            const container = document.getElementById(`points-${template}`);
+            const pointNames = ['Top-Left', 'Top-Right', 'Bottom-Right', 'Bottom-Left'];
+
+            let html = '';
+            for (let i = 0; i < 4; i++) {
+                if (mapping.points[i]) {
+                    html += `<div class="point complete">${i + 1}. ${pointNames[i]}: (${mapping.points[i][0]}, ${mapping.points[i][1]}) ✓</div>`;
+                } else {
+                    html += `<div class="point">${i + 1}. ${pointNames[i]}: (click on image)</div>`;
+                }
+            }
+            container.innerHTML = html;
+        }
+
+        function resetTemplate(template) {
+            const mapping = mappings[template];
+            mapping.points = [];
+
+            // Redraw image
+            const canvas = mapping.canvas;
+            const ctx = mapping.ctx;
+            const img = new Image();
+            img.src = `/templates/lifestyle/${template}`;
+            img.onload = () => {
+                ctx.clearRect(0, 0, 1024, 1024);
+                ctx.drawImage(img, 0, 0, 1024, 1024);
+            };
+
+            updatePointsList(template);
+        }
+
+        function loadDefault(template) {
+            const defaults = {
+                'lifestyle-male-1-caucasian-mental-health.png': [[370, 280], [650, 280], [680, 560], [340, 560]],
+                'lifestyle-male-2-black-developer.png': [[370, 280], [650, 280], [680, 560], [340, 560]],
+                'lifestyle-male-3-asian-coffee.png': [[370, 280], [650, 280], [680, 560], [340, 560]],
+                'lifestyle-male-4-hispanic-entrepreneur.png': [[370, 280], [650, 280], [680, 560], [340, 560]],
+                'lifestyle-female-1-caucasian-mental-health.png': [[380, 290], [640, 290], [670, 550], [350, 550]],
+                'lifestyle-female-2-black-developer.png': [[380, 290], [640, 290], [670, 550], [350, 550]],
+                'lifestyle-female-3-asian-fitness.png': [[380, 290], [640, 290], [670, 550], [350, 550]],
+                'lifestyle-female-4-hispanic-entrepreneur.png': [[380, 290], [640, 290], [670, 550], [350, 550]]
+            };
+
+            resetTemplate(template);
+            const defaultPoints = defaults[template];
+            if (defaultPoints) {
+                defaultPoints.forEach(point => {
+                    mappings[template].points.push(point);
+                });
+
+                // Redraw with points
+                const mapping = mappings[template];
+                const ctx = mapping.ctx;
+                defaultPoints.forEach((point, idx) => {
+                    ctx.fillStyle = colors[idx];
+                    ctx.beginPath();
+                    ctx.arc(point[0], point[1], 8, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 14px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(labels[idx], point[0], point[1]);
+                });
+
+                // Draw lines
+                ctx.strokeStyle = 'lime';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(defaultPoints[0][0], defaultPoints[0][1]);
+                for (let i = 1; i < 4; i++) {
+                    ctx.lineTo(defaultPoints[i][0], defaultPoints[i][1]);
+                }
+                ctx.closePath();
+                ctx.stroke();
+
+                updatePointsList(template);
+            }
+        }
+
+        function generateCode() {
+            let code = `TEMPLATE_MAPPINGS = {\n`;
+
+            templates.forEach(template => {
+                const mapping = mappings[template];
+                if (mapping.points.length === 4) {
+                    const pointsStr = mapping.points.map(p => `(${p[0]}, ${p[1]})`).join(', ');
+                    code += `    '${template}': {\n`;
+                    code += `        'points': [${pointsStr}],\n`;
+                    code += `        'description': '${descriptions[template]}'\n`;
+                    code += `    },\n`;
+                }
+            });
+
+            code += `}\n`;
+
+            document.getElementById('output').style.display = 'block';
+            document.getElementById('output').textContent = code;
+            document.getElementById('output').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

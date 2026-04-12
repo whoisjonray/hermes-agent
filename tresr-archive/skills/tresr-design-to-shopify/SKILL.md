@@ -9,8 +9,8 @@ Complete pipeline for generating a t-shirt design and getting it live on the TRE
 
 ## Prerequisites
 
-- **Gemini API Key**: `GEMINI_API_KEY` in `.env` → `AIzaSyDSxTVzpXuG0k-sgJMzXxhCGFElxhWuON=REDACTED`
-- **Shopify Access Token**: `SHOPIFY_ACCESS_TOKEN` in `.env` → `shpat_b4da515ab8255772e7833ec841cd34e=REDACTED`
+- **Gemini API Key**: `GEMINI_API_KEY` in `.env` → `REDACTED_GEMINI_KEY=REDACTED`
+- **Shopify Access Token**: `SHOPIFY_ACCESS_TOKEN` in `.env` → `REDACTED_SHOPIFY_TOKEN=REDACTED`
 - **Shopify Store**: `becc05-b4.myshopify.com`
 - **Cloudinary**: cloud `dqslerzk9`, API key `364274988183368`, secret `gJEAx4VjStv1uTKyi3DiLAwL8pQ`
 - **Location ID**: `96616939805`
@@ -226,7 +226,7 @@ Or just use Shopify's image upload (attach images directly to product — Shopif
 **API Endpoint**:
 ```
 POST https://becc05-b4.myshopify.com/admin/api/2024-01/products.json
-Header: X-Shopify-Access-Token: shpat_b4da515ab8255772e7833ec841cd34e=REDACTED
+Header: X-Shopify-Access-Token: REDACTED_SHOPIFY_TOKEN=REDACTED
 ```
 
 **Product Payload**:

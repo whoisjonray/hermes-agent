@@ -1,0 +1,122 @@
+{
+  "styleProfiles": {
+    "default": {
+      "name": "TRESR High-Contrast Vector Style",
+      "description": "Bold, stylized graphic designs for TRESR merch. Clean vector artwork with high visual contrast. Designs feature lifestyle and culture themes in white or accent colors on a solid black background.",
+      "visualCharacteristics": {
+        "colorScheme": {
+          "background": "#000000",
+          "foreground": "#FFFFFF"
+        },
+        "lineQuality": "Smooth vector transitions, no jagged or pixelated edges",
+        "edgeStyle": "Clean with refined anchor transitions",
+        "fillType": "Solid fill (no gradients or outlines)",
+        "contrast": "High-contrast black and white",
+        "stroke": "None used unless specified"
+      },
+      "designDirectives": {
+        "geometry": "Use clean shapes as foundation",
+        "balance": "Maintain visual balance between design weight and negative space",
+        "sizing": "Fits within a square composition; edge-to-edge minimal margin",
+        "typography": "Bold sans-serif for text elements"
+      },
+      "fileGuidelines": {
+        "resolution": "Minimum 1024x1024px",
+        "background": "Solid black only (#000000)",
+        "transparency": false
+      }
+    },
+    "coffee": {
+      "name": "Coffee Culture Typography Style",
+      "description": "Bold typography and coffee-related graphics. High energy, caffeine-powered aesthetic.",
+      "visualCharacteristics": {
+        "colorScheme": {
+          "background": "#000000",
+          "foreground": "#FFFFFF",
+          "accent": "#8B4513"
+        },
+        "fillType": "Solid fill",
+        "contrast": "High-contrast"
+      },
+      "subjectMatter": {
+        "type": "Typography, Coffee Culture",
+        "exampleSubjects": [
+          "Coffee cups",
+          "Caffeine molecules",
+          "Battery icons",
+          "Coffee beans",
+          "Steam/vapor"
+        ],
+        "phrases": [
+          "Powered by caffeine",
+          "But first, coffee",
+          "Coffee addict",
+          "No coffee no workee"
+        ]
+      }
+    },
+    "lifestyle": {
+      "name": "Modern Lifestyle Minimalist",
+      "description": "Clean minimalist designs for lifestyle themes. Relatable, shareable content.",
+      "visualCharacteristics": {
+        "colorScheme": {
+          "background": "#000000",
+          "foreground": "#FFFFFF"
+        },
+        "fillType": "Solid fill",
+        "edgeStyle": "Clean minimal lines"
+      },
+      "subjectMatter": {
+        "type": "Lifestyle, Relatable humor",
+        "themes": [
+          "Introvert culture",
+          "Work life",
+          "Pet lover",
+          "Music/creative",
+          "Gaming",
+          "Fitness"
+        ]
+      }
+    },
+    "vintage": {
+      "name": "Vintage Distressed Graphic",
+      "description": "Retro distressed graphics with nostalgic appeal. Worn, vintage aesthetic.",
+      "visualCharacteristics": {
+        "colorScheme": {
+          "background": "#000000",
+          "foreground": "#FFFFFF"
+        },
+        "texture": "Distressed, worn effect",
+        "fillType": "Solid with texture overlay"
+      },
+      "subjectMatter": {
+        "type": "Vintage badges, retro emblems",
+        "elements": [
+          "Circular badges",
+          "Banner ribbons",
+          "Stars and stripes",
+          "Est. dates"
+        ]
+      }
+    }
+  },
+  "promptTemplate": {
+    "basePrompt": "Create a standalone graphic artwork for screen printing on apparel.",
+    "criticalRequirements": [
+      "Generate ONLY the artwork/graphic itself",
+      "Solid black background (#000000) - the background will be removed",
+      "NO t-shirt, NO clothing, NO mockup, NO model, NO person wearing anything",
+      "Just the isolated graphic design centered in the image",
+      "High contrast, print-ready quality",
+      "Bold, clear design that works at any size",
+      "White design elements on black background"
+    ],
+    "outputFormat": "Square composition, centered, edge-to-edge with minimal margin"
+  },
+  "learningConfig": {
+    "trackApprovals": true,
+    "trackRejections": true,
+    "trackFeedback": true,
+    "improveFromPatterns": true
+  }
+}
