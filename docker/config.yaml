@@ -1,10 +1,10 @@
-# Hermes TRESR Config - Cost-optimized model routing
-# Sonnet for daily ops, Opus only for deep reasoning via delegation
+# Hermes DoorGrow Scout - Model routing
+# Anthropic (DoorGrow key) for interactive, Nous Hermes for cron/delegation
+# Created: 2026-04-16
 
 model:
   default: "anthropic/claude-sonnet-4-6"
-  provider: "openrouter"
-  base_url: "https://openrouter.ai/api/v1"
+  provider: "anthropic"
 
 compression:
   enabled: true
@@ -21,7 +21,7 @@ delegation:
 
 terminal:
   backend: "local"
-  timeout: 180
+  timeout: 300
 
 memory:
   memory_enabled: true
