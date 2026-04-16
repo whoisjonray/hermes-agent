@@ -3,7 +3,7 @@
 # Created: 2026-04-16
 
 model:
-  default: "anthropic/claude-sonnet-4-6"
+  default: "claude-sonnet-4-6"
   provider: "anthropic"
 
 compression:
