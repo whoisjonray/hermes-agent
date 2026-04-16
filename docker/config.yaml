@@ -1,10 +1,11 @@
 # Hermes DoorGrow Scout - Model routing
-# Anthropic (DoorGrow key) for interactive, Nous Hermes for cron/delegation
+# Copied from working TRESR config, only SOUL.md differs
 # Created: 2026-04-16
 
 model:
-  default: "claude-sonnet-4-6"
-  provider: "anthropic"
+  default: "anthropic/claude-sonnet-4-6"
+  provider: "openrouter"
+  base_url: "https://openrouter.ai/api/v1"
 
 compression:
   enabled: true
@@ -21,7 +22,7 @@ delegation:
 
 terminal:
   backend: "local"
-  timeout: 300
+  timeout: 180
 
 memory:
   memory_enabled: true
