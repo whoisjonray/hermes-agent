@@ -1,5 +1,6 @@
 # Hermes TRESR Config - Cost-optimized model routing
-# Sonnet for daily ops, Opus only for deep reasoning via delegation
+# Winston can update this via /model --global and /config commands
+# Entrypoint only copies this on FIRST BOOT - runtime changes persist on volume
 
 model:
   default: "anthropic/claude-sonnet-4-6"

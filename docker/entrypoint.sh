@@ -12,11 +12,13 @@ if [ ! -f "$HERMES_HOME/.env" ]; then
     cp "$INSTALL_DIR/.env.example" "$HERMES_HOME/.env"
 fi
 
-# config.yaml - always copy our custom config (model routing etc)
-if [ -f "$INSTALL_DIR/docker/config.yaml" ]; then
-    cp "$INSTALL_DIR/docker/config.yaml" "$HERMES_HOME/config.yaml"
-elif [ ! -f "$HERMES_HOME/config.yaml" ]; then
-    cp "$INSTALL_DIR/cli-config.yaml.example" "$HERMES_HOME/config.yaml"
+# config.yaml - only copy on first boot (agent updates via /model --global)
+if [ ! -f "$HERMES_HOME/config.yaml" ]; then
+    if [ -f "$INSTALL_DIR/docker/config.yaml" ]; then
+        cp "$INSTALL_DIR/docker/config.yaml" "$HERMES_HOME/config.yaml"
+    else
+        cp "$INSTALL_DIR/cli-config.yaml.example" "$HERMES_HOME/config.yaml"
+    fi
 fi
 
 # SOUL.md - only copy on first boot (agent may edit its own SOUL)
